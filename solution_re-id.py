@@ -5,6 +5,11 @@ primeString: str = ""
 calledB4: bool = False
 
 def solution(index):
+    """
+    Function utilizes the sieve of Erathosthenes on first call
+    and stores the result. On subsequent calls, it only needs to
+    index into the string containg the primes.
+    """
     global primeNums
     global primeString
     global calledB4
