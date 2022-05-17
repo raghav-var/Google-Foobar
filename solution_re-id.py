@@ -15,18 +15,17 @@ import math
 
 primeString: str = "2357"
 primeNums: list[bool] = [False, False, True, True, False, True, False, True, False, False, False]
-sievedTill: int = 10
+#                       [  0      1      2     3     4      5     6      7     8      9      10 ]
 
 def solution(index):
     global primeString
     global primeNums
-    global sievedTill
 
     while len(primeString) < (index + 5):
         
         # will be needed later
         n1 = len(primeNums) - 1
-        primeNums.extend([True] * n1)   # double the size
+        primeNums.extend([True] * len(primeNums))   # double the size
         n2 = len(primeNums) - 1
 
         # cross off the multiples of primes from [2, sqrt(n1)]
@@ -34,7 +33,7 @@ def solution(index):
         i = 2
         while i <= math.floor(math.sqrt(n1)):
             if primeNums[i]:
-                j = (math.floor((n1 / float(i)) - i))*i + i*i
+                j = i*i + math.floor((float(n1)/float(i)) - i)*i
                 while j <= n2:
                     primeNums[j] = False
                     j = j + i
@@ -42,7 +41,7 @@ def solution(index):
 
         # cross of multiples of the primes between sqrt(n1) and sqrt(n2)
         # all these multiples are automatically located beyond n1
-        i =  math.floor(math.sqrt(n1))
+        i = math.floor(math.sqrt(n1))
         while i < math.floor(math.sqrt(n2)):
             if primeNums[i]:
                 j = i*i
@@ -52,10 +51,11 @@ def solution(index):
             i = i + 1
 
         # update the string
-        for i in range(sievedTill, len(primeNums)):
+        for i in range(n1 + 1, len(primeNums)):
             if primeNums[i]:
-                primeString  = primeString + str(i)
-        
-        sievedTill = len(primeNums) - 1
+                primeString = primeString + str(i)
     
     return primeString[index : index + 5]
+
+
+# This is adding in extra digits for some reason
