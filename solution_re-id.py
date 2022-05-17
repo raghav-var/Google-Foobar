@@ -1,8 +1,8 @@
 import math
 
-primeNums: list[bool] = [True] * 20232
-primeString: str = ""
-calledB4: bool = False
+primeNums = [True] * 20232
+primeString = ""
+calledB4 = False
 
 def solution(index):
     """
