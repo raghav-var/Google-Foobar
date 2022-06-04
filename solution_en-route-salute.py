@@ -1,4 +1,4 @@
-def solution(s: str):
+def solution(s):
     passes = 0
     for i in range(0, len(s)):
         if s[i] == '>':
