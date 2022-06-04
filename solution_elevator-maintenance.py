@@ -1,13 +1,11 @@
-from typing import Callable
-
 # MergeSort Class Definition Start ================================================
 
 class MergeSort:
     # Store the comparator function
-    _less: Callable = None
+    _less = None
 
     # Helper functions
-    def _merge(self, list_in: list, begin: int, middle: int, end: int) -> None:
+    def _merge(self, list_in, begin, middle, end):
         temp = []
         i = begin
         j = middle
@@ -28,7 +26,7 @@ class MergeSort:
             list_in[begin + idx] = temp[idx]
         return
 
-    def _mergesort_helper(self, list_in: list, begin: int, end: int) -> None:
+    def _mergesort_helper(self, list_in, begin, end):
         if ((end - begin) <= 1):
             return
         else:
@@ -39,22 +37,22 @@ class MergeSort:
             return
 
     # Default comparator defined internally
-    def _lessThan(lhs, rhs) -> bool:
+    def _lessThan(lhs, rhs):
         return lhs <= rhs
 
     # Constructor and Call
-    def __init__(self, comp: Callable = _lessThan) -> None:
+    def __init__(self, comp = _lessThan):
         self._less = comp
         return
     
-    def __call__(self, list_in: list) -> None:
+    def __call__(self, list_in):
         self._mergesort_helper(list_in, 0, len(list_in))
         return
 
 # MergeSort Class Definition End ==================================================
 
 
-def olderVer(lhs: str, rhs: str) -> bool:
+def olderVer(lhs, rhs):
     # Use these as a tie-breaker if needed
     lhs_len = len(lhs) 
     rhs_len = len(rhs)
@@ -74,7 +72,7 @@ def olderVer(lhs: str, rhs: str) -> bool:
     # So now I can use their string lengths from before
     return lhs_len <= rhs_len
 
-def solution(l: list[str]) -> None:
+def solution(l):
     sort = MergeSort(olderVer)
     sort(l)
-    return
+    return l
