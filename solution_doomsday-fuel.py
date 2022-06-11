@@ -178,3 +178,20 @@ def solution(m):
     out.append(lcd)
 
     return out
+
+    """
+    Basically the big problem seemed to be that not all tets cases had
+    terminating states at the bottom. So I needed to swap the rows
+    (and then the columns) to get everything in canonical form while
+    preserving the relative order within the categories. This would allow
+    the matrix method to work. The only problem was if the starting state
+    was terminal. While converting to canonical form, it would get put 
+    below the transient stages, and the matrix method only shows 
+    absorption probablities for when you start at a transient stage. So
+    to handle this, I added a base case in the solution() function.
+    In every other case, the starting state S0 will be transient and 
+    end up in the first row of the canonical matrix. And so when I get
+    the B matrix, I can just look at its first row.
+
+    ALso in Python 3, gcd is from the math library instead of fractions
+    """
