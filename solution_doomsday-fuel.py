@@ -1,4 +1,5 @@
-from fractions import Fraction, gcd
+from fractions import Fraction
+from math import gcd
 import numpy as np
 
 """
@@ -14,8 +15,14 @@ def getCanonical(matrix):
     returns the canonical form of the input in fractional form as well
     as the number of absorbing states found. Does not modify input, instead
     it returns a new object.
+
+    I think the problem might be that teh terminating states aren't
+    ALWAYS at the bottom. Gonna fix that now
     """
     can_mat = [([None] * len(matrix[0])) for i in range(len(matrix))]
+
+    
+
     absorbing = 0
     for r in range(0, len(matrix)):
         if sum(matrix[r]) == 0: # is an absorbing state
@@ -95,8 +102,13 @@ def solution(m):
     This can be done by finding B = NR, where N is the fundamental
     matrix and R is a portion from the canonical form.
     """
-    # Let's have a simple check to get rid of 1x1 matrices
-    if len(m) == 1:
+    # Wacky cases
+    if sum(m[0]) == m[0][0]:
+        gross = [0] * len(m[0])
+        gross[0] = 1
+        gross.append(1)
+        return gross
+    elif len(m) == 1:
         return [1, 1]
 
     # First, let's obtain the Canonical form
