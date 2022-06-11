@@ -1,17 +1,13 @@
-from fractions import Fraction
-from math import gcd
+from fractions import Fraction, gcd
 import numpy as np
 
 """
 Solution based on: https://math.dartmouth.edu/archive/m20x06/public_html/Lecture14.pdf
 
-I realized that this was a graph-problem while in the shower, and some online searches
-showed that it has a name: absorption probbailities for Absorbing Markov Chains. NGL
-for some reason I though it was a dynamic programming problem at first, but the 
-existence of loops completely destroys that.
+This is basically an absorbing Markov Chain problem
 """
 
-def getCanonical(matrix: list[list[int]]) -> tuple[list[list[Fraction]], int]:
+def getCanonical(matrix):
     """
     I'm making the assumption that all the terminal states are
     at the bottom. Let's see if it is a correct assumption. The function
@@ -33,7 +29,7 @@ def getCanonical(matrix: list[list[int]]) -> tuple[list[list[Fraction]], int]:
     return can_mat, absorbing
 
 
-def toRREF(M: np.ndarray) -> None:
+def toRREF(M):
     """
     Function modifies input array to be in reduced row echelon form
     Pseudocode from: https://en.wikipedia.org/wiki/Row_echelon_form
@@ -64,7 +60,7 @@ def toRREF(M: np.ndarray) -> None:
     return
 
 
-def inverseMatrix(matrix: np.ndarray) -> np.ndarray:
+def inverseMatrix(matrix):
     """
     Can't use the numpy.linalg.inv() function since the elements 
     are Fractions. So I'm going to implement my own algorithm to 
@@ -93,7 +89,7 @@ def inverseMatrix(matrix: np.ndarray) -> np.ndarray:
     return A_inv
 
 
-def solution(m: list[list[int]]) -> list[int]:
+def solution(m):
     """
     I need to find the absorption probabilties for this Markov chain.
     This can be done by finding B = NR, where N is the fundamental
