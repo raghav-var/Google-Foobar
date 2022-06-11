@@ -1,5 +1,4 @@
-from fractions import Fraction
-from math import gcd
+from fractions import Fraction, gcd
 import numpy as np
 
 """
@@ -16,24 +15,58 @@ def getCanonical(matrix):
     as the number of absorbing states found. Does not modify input, instead
     it returns a new object.
 
-    I think the problem might be that teh terminating states aren't
+    I think the problem might be that the terminating states aren't
     ALWAYS at the bottom. Gonna fix that now
+
+    I'm also using this function to convert identity matrices to 
+    fractionla form. Def a waste of computation but whatever.
+
+    S0 will always be first row since if S0 is terminal, this 
+    function will not have been called at all
     """
-    can_mat = [([None] * len(matrix[0])) for i in range(len(matrix))]
 
-    
+    terminals = []
+    num_terminals = 0
+    transients = []
+    num_transients = 0
+    swaps = [None] * len(matrix)
 
-    absorbing = 0
+    # Rearrange rows so all terminal states are at end of matrix
+    # relative ordering within the categories is maintained
     for r in range(0, len(matrix)):
-        if sum(matrix[r]) == 0: # is an absorbing state
-            absorbing += 1
-            for c in range(0, len(matrix[r])):
+        if (sum(matrix[r]) != 0) and (sum(matrix[r]) != matrix[r][r]):
+            transients.append(matrix[r])
+            swaps[r] = num_transients
+            num_transients += 1
+    for r in range(0, len(matrix)):
+        if (sum(matrix[r]) == 0) or (sum(matrix[r]) == matrix[r][r]):
+            terminals.append(matrix[r])
+            swaps[r] = num_transients + num_terminals
+            num_terminals += 1
+    temp = transients + terminals
+
+    # Now I need to switch the columns based on the new row positions
+    temp = np.array(temp)
+    temp2 = np.copy(temp)
+    for i in range(0, len(swaps)):
+        temp2[:, swaps[i]] = temp[:, i]
+    temp2 = temp2.tolist()
+
+    # Now convert the rows into fractions and standardize the 
+    # represnetation of terminals
+    can_mat = [([None] * len(temp2[0])) for i in range(len(temp2))]
+
+    for r in range(0, len(temp2)):
+        if r < num_transients:
+            for c in range(0, len(temp2[0])):
+                can_mat[r][c] = Fraction(temp2[r][c], sum(temp2[r]))
+        else:
+            for c in range(0, len(temp2[0])):
                 can_mat[r][c] = Fraction(0, 1)
             can_mat[r][r] = Fraction(1, 1)
-        else:
-            for c in range(0, len(matrix[r])):
-                can_mat[r][c] = Fraction(matrix[r][c], sum(matrix[r]))
-    return can_mat, absorbing
+    
+    # Return all the important information
+    return can_mat, num_terminals
 
 
 def toRREF(M):
@@ -86,7 +119,7 @@ def inverseMatrix(matrix):
     I = np.identity(len(A), dtype=int).tolist()     # Generate identity matrix
     I, trash = getCanonical(I)                      # convert to fractions
     I = np.array(I)                                 # convert back to np.ndarray
-    AwithI = np.concatenate((A, I), axis=1)         # Gives [ A | I ] as a new object
+    AwithI = np.concatenate((A, I), axis=1)         # Gives [ A | I ] as a new object PROBLEM from CONCATENATE?
 
     # Need to use Gauss-Jordan elimination, to do: [ A | I ] -> [ I | A^-1 ]
     # Just go to RREF and extract right half
@@ -104,7 +137,12 @@ def solution(m):
     """
     # Wacky cases
     if sum(m[0]) == m[0][0]:
-        gross = [0] * len(m[0])
+        # S0 is terminal, just count up how many others there are
+        count = 0
+        for r in range(0, len(m)):
+            if sum(m[r]) == m[r][r]:
+                count += 1
+        gross = [0] * count
         gross[0] = 1
         gross.append(1)
         return gross
