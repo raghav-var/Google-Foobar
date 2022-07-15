@@ -1,4 +1,4 @@
-def solution(x: str, y: str) -> str:
+def solution(x, y):
     # Your code here
     M = int(x)
     F = int(y)
