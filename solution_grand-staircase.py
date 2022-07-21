@@ -1,6 +1,6 @@
 memo = None
 
-def memo_access(r: int, c: int) -> int:
+def memo_access(r, c):
     global memo
     # Check if filled
     if memo[r][c] != None:
@@ -11,7 +11,7 @@ def memo_access(r: int, c: int) -> int:
         memo[r][c] += memo_access(r - 1, c - r)
     return memo[r][c]
 
-def solution(n: int) -> int:
+def solution(n):
     global memo
     # Initialize the memo
     memo = [[None] * (n + 1) for i in range(n + 1)]
@@ -41,5 +41,3 @@ def solution(n: int) -> int:
     unless someone EXPLICITLY decides to mess with it, in which case it's their
     problem.
 """
-
-print(solution(200))
